@@ -18,13 +18,31 @@ int create(char flag[10], char filename[20]) //May have to update with malloc la
 
   if (strcmp(flag, "-f")==0)
   {
+	// Checks to see if a file with that name already exists
+	if (fileExists(filename))
+	{
+		printf("ERROR: File with name '%s' already exists\n", filename);
+		return -1;
+	}
+
+	// Creates and opens file
 	fp = fopen(filename, "w+"); //creates a file with the given name
+
+	// Closes file
+	fclose(fp);
 
 	// Checks whether the file exists now
 	if (fileExists(filename))
+	{
+	  printf("File Created\n");
 	  return 0;
+	}
 	else
+	{
+	  printf("ERROR: File not create\n");
 	  return -1;
+	}
+	  
   }
   else if (strcmp (flag, "-d")==0)
   {
@@ -34,12 +52,14 @@ int create(char flag[10], char filename[20]) //May have to update with malloc la
 		int dirCreated = mkdir(filename, 0700);
 	
 		if (!dirCreated)
-			printf("Directory Created\n");
+			return 0;
 		else
-			printf("Failed to create directory\n");
+			return -1;
 	}
 	else
-		printf("Directory with that name already exists\n");
+	{
+		printf("ERROR: Directory with name '%s' already exists\n", filename);
+	}
   }
  /* 
   *else if (strcmp (flag, "-h")==0)
