@@ -8,8 +8,9 @@
 int main (int argc, char *argv)
 {
 	char command[10],
-	       	flag[10],
-	       	filename[20],
+	       	flag[3],
+	       	filename1[20],
+		filename2[20],
 	       	line[100]; //May have to change to malloc later
 
 	//string = name of new file for create command
@@ -26,7 +27,7 @@ int main (int argc, char *argv)
 		
 		int count = 0;
 		
-		while (token != NULL || count == 3)
+		while (token != NULL)
 		{
 			if (count == 0)
 			{
@@ -40,16 +41,26 @@ int main (int argc, char *argv)
 				count++;
 				token = strtok(NULL, " ");
 			}
-			else 
+			else if (count == 2)
 			{
-				strcpy(filename, token);
+				strcpy(filename1, token);
+				count++;
+				token = strtok(NULL, " ");
+			}
+			else
+			{
+				strcpy(filename2, token);
+				token = strtok(NULL, " ");
 				break;
 			}
 		}
 
 		// Handles commands
 		if (strcmp(command, CREATE) == 0)
-			create(flag, filename);
+			if (strcmp(flag, "-f") == 0 || strcmp(flag, "-d") == 0)
+				create(flag, filename1);
+			else
+				createLinks(flag, filename1, filename2);
 
 		// Gets another user input
 		scanf("%[^\n]%*c", line);
