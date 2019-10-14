@@ -1,0 +1,6 @@
+if receive
+    chdir
+endif
+ignore received date from message-id
+set keep append ask dot save ignoreeof quiet EDITOR=/usr/ucb/vi VISUAL=emacs crt=22
+

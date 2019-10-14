@@ -15,7 +15,7 @@ int create(char flag[10], char filename[20]) //May have to update with malloc la
   // -d = directory path, permission 0750
   //-h = hardlink
   //-s = softlink
-
+  int fileD = creat(filename, "w+") //use input argument 'filename' to open or create new file descriptor
   if (strcmp(flag, "-f")==0)
   {
 	fp = fopen(filename, "w+"); //creates a file with the given name

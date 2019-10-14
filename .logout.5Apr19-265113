@@ -1,0 +1,4 @@
+# The contents of this file is executed each time you log out.
+
+clear
+echo "`logname` logged out at `date`"
