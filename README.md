@@ -1,4 +1,4 @@
-To do:
-Error handling for opening files
-Should be able to figure out the directory "-d" flag now or by the end of next week
-
+## Todo List:
+- Update create.c to use creat() function instead of opening and closing the file.
+- Add implementation of -s and -h for hard and soft links into create.c
+- Get started on reading/taking in binary files (create another c file for this called 'filecreator')
