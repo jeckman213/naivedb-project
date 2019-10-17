@@ -19,51 +19,37 @@ int main (int argc, char *argv)
 	// Get user input
 	scanf("%[^\n]%*c", line);
 
-	
-	// Keeps the program running until user types in QUIT command(see commands.h)
-	while(strcmp(line, QUIT) != 0)
-	{
-		char *token = strtok(line, " ");
-		
-		int count = 0;
-		
-		while (token != NULL)
-		{
-			if (count == 0)
-			{
-				strcpy(command, token);
-				count++;
-				token = strtok(NULL, " ");
-			}
-			else if (count == 1)
-			{
-				strcpy(flag, token);
-				count++;
-				token = strtok(NULL, " ");
-			}
-			else if (count == 2)
-			{
-				strcpy(filename1, token);
-				count++;
-				token = strtok(NULL, " ");
-			}
-			else
-			{
-				strcpy(filename2, token);
-				token = strtok(NULL, " ");
-				break;
-			}
-		}
+	command = strtok(line, " ");
 
+	// Keeps the program running until user types in QUIT command(see commands.h)
+	while(strcmp(command, QUIT) != 0)
+	{
 		// Handles commands
 		if (strcmp(command, CREATE) == 0)
+		{
+			flag = strtok(NULL, " ");
+			
 			if (strcmp(flag, "-f") == 0 || strcmp(flag, "-d") == 0)
+			{
+				filename1 = strtok(NULL, " ");
 				create(flag, filename1);
+			}
 			else
+			{
+				filename1 = strtok(NULL, " ");
+				filename2 = strtok(NULL, " ");
 				createLinks(flag, filename1, filename2);
+			}
+		}
+		else if (strcmp(command, CONVERT) == 0)
+		{
+					
+		}
 
 		// Gets another user input
 		scanf("%[^\n]%*c", line);
+
+
 	}
 
 	return 0;

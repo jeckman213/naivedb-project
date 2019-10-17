@@ -2,6 +2,8 @@
 
 #include <string.h>
 
-const char CREATE[8] = "create\0";
+const char CREATE[8] = "create";
 
 const char QUIT[6] = "quit";
+
+const char CONVERT = "fileconverter";
