@@ -18,8 +18,11 @@ int main (int argc, char *argv)
 
 	// Get user input
 	scanf("%[^\n]%*c", line);
-
 	
+	// If the user just enter an empty line display a list of commands that can be done
+	if (strcmp(line, "\n")==0)
+		printf("List of commands:\n create: flags -f (create file), -d (create directory), -h (create hard link), and -s (create soft link)");
+
 	// Keeps the program running until user types in QUIT command(see commands.h)
 	while(strcmp(line, QUIT) != 0)
 	{
@@ -63,6 +66,7 @@ int main (int argc, char *argv)
 				createLinks(flag, filename1, filename2);
 
 		// Gets another user input
+		printf("Enter another command (enter 'quit' to stop): \n");
 		scanf("%[^\n]%*c", line);
 	}
 
