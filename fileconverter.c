@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
+
+// For create functions
 #include "headers.h"
 
 // Prototype for helper function
@@ -13,7 +16,8 @@ void fileconverter(char infile[20], char outdirectory[20])
 	int power = 0;
 	int counter = 0;
 	int character = 0;
-	char record = (char*) malloc(sizeof(char) * 28);
+	const int SIZE_OF_RECORD = 29;
+	char *record = (char*) malloc(sizeof(char) * SIZE_OF_RECORD);
 
 	// Opens bin file
 	in = fopen(infile, "r");
@@ -34,17 +38,22 @@ void fileconverter(char infile[20], char outdirectory[20])
         counter++; //keeps track of bits
 		if ((counter % 8) == 0) //after 8 bits -> convert the character and reset
 		{
-			strncat(record, convert(character), 1);
+			char append = convert(character);
+			strncat(record, &append, 1);
 			character = 0;
-		}
 
-		if (strlen(record) == 28) 
-		{
-			fprintf(out, record);
-			record = (char*) malloc(sizeof(char) * 28);
-			return;
+			if (append == '\n') 
+			{
+				// Prints record out in text file
+				fprintf(out, record);
+
+				// New allocation of memory for record to reset
+				record = (char*) malloc(sizeof(char) * SIZE_OF_RECORD);
+			}
 		}
 	}
+
+	free(record);
 
 	// Closes opened files
 	fclose(in);
