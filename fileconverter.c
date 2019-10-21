@@ -17,8 +17,8 @@ fp = fopen(infile, "r");
 
 while (c!=EOF)
 {
-        c=getc(fp);
-        if (c=='1')
+        c=getc(fp); //gets input from a file pointer reading a stream of data, get character then move position indicator
+        if (c=='1') //if the unsigned char is showing negative, perfor two's complement
                 {
                 power=7-((ftell(fp)-1)%8);//ftell(first)==1->1000 0000->power=7-(1-1)=7-> 2^7
 		character+=pow(2, power);//adds all 1's to the character
