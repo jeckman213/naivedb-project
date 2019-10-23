@@ -2,12 +2,19 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 // For create functions
 #include "headers.h"
 
 // Prototype for helper function
 char convert(int ascii);
+
+// Constants for airlines
+const char *AMERICAN = "AA";
+const char *DELTA = "DL";
+const char *FRANCE = "F";
+const char *SKYWEST = "OO";
 
 void fileconverter(char infile[20], char outdirectory[20])
 {
@@ -18,14 +25,12 @@ void fileconverter(char infile[20], char outdirectory[20])
 	int character = 0;
 	const int SIZE_OF_RECORD = 29;
 	char *record = (char*) malloc(sizeof(char) * SIZE_OF_RECORD);
+	char *path = (char*) malloc(sizeof(char) * 30);
 
-	// Opens bin file
 	in = fopen(infile, "r");
 
 	// Creates file using create.c
-	create("-f", outdirectory);
-	// Opens out text file
-	out = fopen(outdirectory, "w");
+	create("-d", outdirectory);
 
 	while (c != EOF)
 	{
@@ -38,26 +43,63 @@ void fileconverter(char infile[20], char outdirectory[20])
         counter++; //keeps track of bits
 		if ((counter % 8) == 0) //after 8 bits -> convert the character and reset
 		{
+			printf("Got into append process\n");
 			char append = convert(character);
 			strncat(record, &append, 1);
 			character = 0;
 
+			if (strlen(record) < 3) 
+			{
+				printf("Got into determine airport\n");
+				strncat(path, "/", 1);
+				strncat(path, outdirectory, strlen(outdirectory));
+				
+				printf("Got past first strncat\n");	
+
+				if (strcmp(record, AMERICAN) == 0)
+				{
+					strncat(path, "/AA.txt", 8);
+				}
+				else if (strcmp(record, DELTA) == 0)
+				{
+					strncat(path, "/DL.txt", 8);	
+				}
+				else if (strcmp(record, FRANCE) == 0)
+				{
+					strncat(path, "/F.txt", 7);
+				}
+				else if (strcmp(record, SKYWEST) == 0)
+				{
+					strncat(path, "/OO.txt", 8);
+				} 
+				else 
+				{
+					strncat(path, "/z.txt", 7);
+					printf("Didn't find airline code\n");
+				}
+
+				printf("%s", path);
+				
+				creat(path, 0700);
+			}
+
 			if (append == '\n') 
 			{
+				printf("Got to fprintf to txt file\n");
 				// Prints record out in text file
 				fprintf(out, record);
 
 				// New allocation of memory for record to reset
 				record = (char*) malloc(sizeof(char) * SIZE_OF_RECORD);
+
+				// Closes currently opened file
+				fclose(out);
 			}
 		}
 	}
 
-	free(record);
-
 	// Closes opened files
 	fclose(in);
-	fclose(out);
 }
 
 

@@ -10,11 +10,12 @@ int main (int argc, char *argv)
 	char command[10],
 	       	flag[3],
 	       	filename1[20],
-		filename2[20],
-	       	line[100]; //May have to change to malloc later
+		filename2[20];
+	char *line = (char*) malloc(sizeof(char) * 50);
 
 	//string = name of new file for create command
 	printf("Enter a command (format is [command] [flag] [string])\n");
+
 
 	// Get user input
 	scanf("%[^\n]%*c", line);
@@ -29,6 +30,8 @@ int main (int argc, char *argv)
 	// Keeps the program running until user types in QUIT command(see commands.h)
 	while(strcmp(command, QUIT) != 0)
 	{
+		printf("%s\n", command);
+		
 		// Handles commands
 		// If command specified is the create command
 		if (strcmp(command, CREATE) == 0)
@@ -58,15 +61,15 @@ int main (int argc, char *argv)
 				printf("ERROR: Flag %s is not a correct flag\n", flag);
 			}
 		}
-		// If command specified is the fileconverter command
 		else if (strcmp(command, CONVERT) == 0)
 		{
+			printf("1\n");
 			// Gets the in file name
 			strcpy(filename1, strtok(NULL, " "));
 
 			// Gets the out file name
 			strcpy(filename2, strtok(NULL, " "));
-
+				
 			fileconverter(filename1, filename2);			
 		}
 

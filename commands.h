@@ -6,4 +6,4 @@ const char CREATE[8] = "create";
 
 const char QUIT[6] = "quit";
 
-const char CONVERT[15] = "fileconverter";
+const char CONVERT[20] = "fileconverter";
