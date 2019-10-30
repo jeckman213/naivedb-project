@@ -10,64 +10,76 @@ int main (int argc, char *argv)
 	char command[10],
 	       	flag[3],
 	       	filename1[20],
-		filename2[20],
-	       	line[100]; //May have to change to malloc later
+		filename2[20];
+	char *line = (char*) malloc(sizeof(char) * 50);
 
 	//string = name of new file for create command
 	printf("Enter a command (format is [command] [flag] [string])\n");
 
+
 	// Get user input
 	scanf("%[^\n]%*c", line);
-	
+
 	// If the user just enter an empty line display a list of commands that can be done
-	if (strcmp(line, "\n")==0)
+	if (strcmp(line, "\n") == 0)
 		printf("List of commands:\n create: flags -f (create file), -d (create directory), -h (create hard link), and -s (create soft link)");
 
+	// Get the command from the entered line
+	strcpy(command, strtok(line, " "));
+
 	// Keeps the program running until user types in QUIT command(see commands.h)
-	while(strcmp(line, QUIT) != 0)
+	while(strcmp(command, QUIT) != 0)
 	{
-		char *token = strtok(line, " ");
+		printf("%s\n", command);
 		
-		int count = 0;
-		
-		while (token != NULL)
+		// Handles commands
+		// If command specified is the create command
+		if (strcmp(command, CREATE) == 0)
 		{
-			if (count == 0)
+			strcpy(flag, strtok(NULL, " "));
+			
+			// if flag is for creating a file or directory
+			if (strcmp(flag, "-f") == 0 || strcmp(flag, "-d") == 0)
 			{
-				strcpy(command, token);
-				count++;
-				token = strtok(NULL, " ");
+				strcpy(filename1, strtok(NULL, " "));
+				create(flag, filename1);
 			}
-			else if (count == 1)
-			{
-				strcpy(flag, token);
-				count++;
-				token = strtok(NULL, " ");
+			// If flag is for creating a hard or soft link
+			else if (strcmp(flag, "-h") == 0 || strcmp(flag, "-s") == 0) 
+			{	
+				// Gets file original file name
+				strcpy(filename1, strtok(NULL, " "));
+				
+				// Gets new file name
+				strcpy(filename2, strtok(NULL, " "));
+
+				createLinks(flag, filename1, filename2);
 			}
-			else if (count == 2)
+			// If an incorrect flag was given
+			else 
 			{
-				strcpy(filename1, token);
-				count++;
-				token = strtok(NULL, " ");
-			}
-			else
-			{
-				strcpy(filename2, token);
-				token = strtok(NULL, " ");
-				break;
+				printf("ERROR: Flag %s is not a correct flag\n", flag);
 			}
 		}
+		else if (strcmp(command, CONVERT) == 0)
+		{
+			printf("1\n");
+			// Gets the in file name
+			strcpy(filename1, strtok(NULL, " "));
 
-		// Handles commands
-		if (strcmp(command, CREATE) == 0)
-			if (strcmp(flag, "-f") == 0 || strcmp(flag, "-d") == 0)
-				create(flag, filename1);
-			else
-				createLinks(flag, filename1, filename2);
+			// Gets the out file name
+			strcpy(filename2, strtok(NULL, " "));
+				
+			fileconverter(filename1, filename2);			
+		}
 
 		// Gets another user input
 		printf("Enter another command (enter 'quit' to stop): \n");
 		scanf("%[^\n]%*c", line);
+
+		// Inserts first user typed word into command string
+		strcpy(command, strtok(line, " "));
+
 	}
 
 	return 0;
