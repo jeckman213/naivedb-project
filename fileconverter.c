@@ -1,3 +1,4 @@
+// Standard library includes
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -15,19 +16,29 @@ const char *AMERICAN = "AA";
 const char *DELTA = "DL";
 const char *FRANCE = "F";
 const char *SKYWEST = "OO";
+  
+// The max size of a record/line of flight data
+const int SIZE_OF_RECORD = 30;
 
 void fileconverter(char infile[20], char outdirectory[20])
 {
+  // Files pointers
 	FILE *in, *out;
+  
+  // For converting the binary to a char
 	int c;
 	int power = 0;
 	int counter = 0;
 	int character = 0;
-	const int SIZE_OF_RECORD = 29;
+  
+  // For storing the whole flight record/line
 	char *record = (char*) malloc(sizeof(char) * SIZE_OF_RECORD);
+  
+  // For storing the path to the text file in the out directory
 	char *path = (char*) malloc(sizeof(char) * 30);
 	char *filePath = (char*) malloc(sizeof(char) * 30);
 
+  // Opens binary file in read mode
 	in = fopen(infile, "r");
 
 	// Creates file using create.c
@@ -37,6 +48,8 @@ void fileconverter(char infile[20], char outdirectory[20])
 	strncat(path, "./", 2);
 	strncat(path, outdirectory, strlen(outdirectory));
 
+  // Converts each byte into a char and then inserts it into record
+  // After that it fprintf() into a file determined by the first 3 letters of the record
 	while (c != EOF)
 	{
         	c=getc(in);
@@ -47,6 +60,17 @@ void fileconverter(char infile[20], char outdirectory[20])
         	}
        		counter++; //keeps track of bits
 		if ((counter % 8) == 0) //after 8 bits -> convert the character and reset
+        c=getc(fp); //gets input from a file pointer reading a stream of data, get character then move position indicator
+        if (c=='1')//if bit is turned on...
+                {
+		//find out where the bit is in the byte
+		//and record that for the power of two
+                power=7-((ftell(fp)-1)%8);//ftell(first)==1->1000 0000->power=7-(1-1)=7-> 2^7
+		character+=pow(2, power);//adds all 1's to the character -- sums turned on bits in byte
+                }
+        counter++;//keeps track of bits
+	format++; //keeps track of column formation & spacing
+	if ((counter%8)==0)//after 8 bits -> convert the character and reset
 		{
 			char append = convert(character);
 			strncat(record, &append, 1);
@@ -102,6 +126,8 @@ void fileconverter(char infile[20], char outdirectory[20])
 			}
 		}
 	}
+  
+  // Frees all heap memory
 	free(filePath);
 	free(record);
 	free(path);
@@ -116,36 +142,4 @@ char convert(int ascii)
 	char c = ascii; //converts ascii to char and prints
 	return c;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  

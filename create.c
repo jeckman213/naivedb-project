@@ -25,10 +25,11 @@ int create(char flag[3], char filename[20])
 	}
 
 	// Creates and opens file
-	fp = fopen(filename, "w+"); //creates a file with the given name
-
+	//fp = fopen(filename, "w+"); //creates a file with the given name
+	int fd = creat(filename, 0640);
 	// Closes file
-	fclose(fp);
+	//fclose(fp);
+	close(fd); // closes file opened with file descriptor
 
 	// Checks whether the file exists now
 	if (fileExists(filename))
@@ -38,7 +39,7 @@ int create(char flag[3], char filename[20])
 	}
 	else
 	{
-	  printf("ERROR: File not create\n");
+	  printf("ERROR: File not created\n");
 	  return -1;
 	}
 	  
