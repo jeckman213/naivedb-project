@@ -7,58 +7,51 @@
 
 /**--------------------------Structure definition--------------------------**/
 // struct definition for the airline structure **/
-typedef struct Airline_S{
+typedef struct Airlines{
 	char airline[7];
 	int occ;
-	struct Airline_S *next;
-	struct Airline_S *prev;
+	struct Airlines_S *next;
+	struct Airlines_S *prev;
 }Airline_S;
 
 // struct definition for the airport structure **/
-typedef struct Airport_S{
-	char airport[3];
+typedef struct Airports{
+    char airport[3];
 	struct Airline_S *fltInfo;
 	struct Airport_S *next;
 	struct Airport_S *prev;
 }Airport_S;
 
-// create original global struct and keep records of the head adress
-Airport_S *ap = createNewPort();
-Airport_S **AP = &ap;
-Airline_S *al = createNewLine();
-Airline_S **AL = &al;
-
- //link airport with airline
-ap->fltInfo = al;
 /**----------------------------------------------------**/
 
 
 /**--------------------------Create & Allocate space for new/temp nodes --------------------------**/
 //create a new airport node 
 Airport_S *createNewPort(){
-	Airport_S *ap = malloc(sizeof(Airport_S));
-	return ap;
+	Airport_S *apt;
+	apt = malloc(sizeof(Airport_S));
+	return apt;
 };
 
 /** create a new airline node **/
 Airline_S *createNewLine(){
-	Airline *al = malloc(sizeof(Airline_S));
-	return al;
+	Airline_S *ali = malloc(sizeof(Airline_S));
+	return ali;
 };
 /**----------------------------------------------------**/
 
 
 /**--------------------------Search existing Nodes--------------------------**/
 // RETURN the next AIRPORT node 
-Airport_S *getNextPort(Airport *ap){
-	Aiport_S *temp = createNewPort();
-	temp = ap->next;
+Airport_S *getNextPort(Airport_S *ap){
+	Airport_S *temp = createNewPort();
+	temp = (Airport_S *)ap->next;
 	return temp;
 };
 //RETURN next AIRLINE node
-Airline_S returnNextPort(Airline_S *al){
+Airline_S *returnNextLine(Airline_S *al){
 	Airline_S *temp = createNewLine();
-	temp = al->next;
+	temp = (Airline_S *)al->next;
 	return temp;
 };
 /**----------------------------------------------------**/
@@ -66,24 +59,28 @@ Airline_S returnNextPort(Airline_S *al){
 
 /**--------------------------Create and link new additional nodes--------------------------**/
 // if there isnt a NEXT node, CREATE one and store information 
+/* -------------may not need
 void newAirportLinker(char cap[3], char cal[7], Airport_S *ap){
-	Aiport_S *temp = createNewPort();
+	Airport_S *temp = createNewPort();
 	Airline_S *temp2 = createNewLine();
-	ap->next = temp;
-	temp->fltInfo = temp2;
-	temp->prev = ap;
-	temp->airport = cap;
-	temp->fltInfo->airline = cal;
+	temp = (Airport_S *)ap->next;
+	temp2 = (Airline_S *)temp->fltInfo;
+	
+	temp->prev = (Airport_S *)ap;
+	ap->next = (Airport_S *)temp;
+	strcpy(temp->airport, cap);
+	strcpy(temp->fltInfo->airline, cal);
 	temp->fltInfo->occ = 1;	
 };
 // CREATE a NEW airline node for an existing airport node and link it to existing list 
-void newAirlineLinker(char cal[7], Airport *ap, Airline_S *al){
+void newAirlineLinker(char cal[7], Airport_S *ap, Airline_S *al){
 	Airline_S *temp = createNewLine();
 	al->next = temp;
 	temp->prev = al;
 	temp->airline = cal;
 	temp->occ = 1;
 };
+---------------------*/
 /**----------------------------------------------------**/
 
 /**--------------------------traverse / build nodes--------------------------**/
@@ -93,9 +90,10 @@ void nodeHandler(char *cal, char *cap, Airport_S *apt) {
 	Airport_S *temp = createNewPort();
 	Airline_S *tempAl = createNewLine();
 	//If the first node's airport name is empty, populate all it's values
-	if(ap->airport == ''){
-		strcpy(cap,ap->airport);
-		strcpy(cal, ap->fltInfo->airLine);
+	if(apt->airport == NULL){
+	    apt->fltInfo = tempAl;
+		strcpy(apt->airport, cap);
+		strcpy(apt->fltInfo->airLine, cal);
 		ap->fltInfo->occ++;
 		ap->fltInfo->next = NULL;
 		ap->fltInfo->prev = NULL;
@@ -159,7 +157,8 @@ int parse(const char *f, const struct stat *flightD, int type){
 	FILE *fp = fopen(f, "r");
 	
 	if(fp==NULL){
-		printf("Cannot open file %s, please try again.", f);
+		printf("Cannot open file %s, file skipped", f);
+		return 0;
 	}
 	if(type == FTW_F){ //check if filepointer is at a file or something else
 		while(fp != EOF){
@@ -189,9 +188,23 @@ int parse(const char *f, const struct stat *flightD, int type){
 
 /**--------------------------MAIN--------------------------**/
 void main(int argc, char *argv[]){
-	
+    
+    // create original global struct and keep records of the head adress
+    Airport_S *ap = createNewPort();
+    Airport_S **AP;
+    Airline_S *al = createNewLine();
+    Airline_S **AL;
+
+    
 	//prototype for parse function
-	int parse(const char *, const struct stat *, int)
+	int parse(const char *, const struct stat *, int);
+	
+	//Assign head nodes
+	AP = &ap;
+	AL = &al;
+	
+	// link airport node with airline node
+	ap->fltInfo = al;
 	
 	//test how many arguments are passed in the calling of the function
 	//to see if the user submitted a preferred filename
