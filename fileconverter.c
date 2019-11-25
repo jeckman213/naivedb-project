@@ -59,17 +59,6 @@ void fileconverter(char infile[20], char outdirectory[20])
 			character += pow(2.0, (double) power); //adds all 1's to the character
         	}
        		counter++; //keeps track of bits
-		if ((counter % 8) == 0) //after 8 bits -> convert the character and reset
-        c=getc(fp); //gets input from a file pointer reading a stream of data, get character then move position indicator
-        if (c=='1')//if bit is turned on...
-                {
-		//find out where the bit is in the byte
-		//and record that for the power of two
-                power=7-((ftell(fp)-1)%8);//ftell(first)==1->1000 0000->power=7-(1-1)=7-> 2^7
-		character+=pow(2, power);//adds all 1's to the character -- sums turned on bits in byte
-                }
-        counter++;//keeps track of bits
-	format++; //keeps track of column formation & spacing
 	if ((counter%8)==0)//after 8 bits -> convert the character and reset
 		{
 			char append = convert(character);
