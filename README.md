@@ -18,4 +18,6 @@
   8. The C file hashFunction.c which will be provided to you on Blackboard, and contains a
   hash function that you must use in your program.
   9. Your makefile should include a clean target.
+ - Finish indexer.c
+ - Implement srchindx.c
 
