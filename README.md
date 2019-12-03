@@ -1,5 +1,5 @@
 ## Todo List:
-1. Update program to reflect project guidelines:
+- Update program to reflect project guidelines:
   1. A C source file named naivedb.c with just the main function for your shell program.
   2. A C source file named create.c with just the main function for the list program.
   3. A C source file named fileconverter.c with just the main function for the fileconverter
