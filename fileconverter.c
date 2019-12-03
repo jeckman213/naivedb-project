@@ -8,9 +8,6 @@
 // For create functions
 #include "headers.h"
 
-// Prototype for helper function
-char convert(int ascii);
-
 // Constants for airlines
 const char *AMERICAN = "AA";
 const char *DELTA = "DL";
@@ -52,16 +49,16 @@ void fileconverter(char infile[20], char outdirectory[20])
   // After that it fprintf() into a file determined by the first 3 letters of the record
 	while (c != EOF)
 	{
-        	c=getc(in);
-        	if (c == '1')
-        	{
-        		power = 7 - ((ftell(in) - 1) % 8); //ftell(first)==1->1000 0000->power=7-(1-1)=7-> 2^7
+    c=getc(in);
+    if (c == '1')
+    {
+    	power = 7 - ((ftell(in) - 1) % 8); //ftell(first)==1->1000 0000->power=7-(1-1)=7-> 2^7
 			character += pow(2.0, (double) power); //adds all 1's to the character
-        	}
-       		counter++; //keeps track of bits
-	if ((counter%8)==0)//after 8 bits -> convert the character and reset
+    }
+    counter++; //keeps track of bits
+		if ((counter%8)==0)//after 8 bits -> convert the character and reset
 		{
-			char append = convert(character);
+			char append = character;
 			strncat(record, &append, 1);
 			character = 0;
 
@@ -124,11 +121,3 @@ void fileconverter(char infile[20], char outdirectory[20])
 	// Closes opened files
 	fclose(in);
 }
-
-
-char convert(int ascii)
-{
-	char c = ascii; //converts ascii to char and prints
-	return c;
-}
-  
