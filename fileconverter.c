@@ -55,7 +55,9 @@ void fileconverter(char infile[20], char outdirectory[20])
     	power = 7 - ((ftell(in) - 1) % 8); //ftell(first)==1->1000 0000->power=7-(1-1)=7-> 2^7
 			character += pow(2.0, (double) power); //adds all 1's to the character
     }
+
     counter++; //keeps track of bits
+		
 		if ((counter%8)==0)//after 8 bits -> convert the character and reset
 		{
 			char append = character;
