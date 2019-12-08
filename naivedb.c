@@ -26,7 +26,8 @@ int main (int argc, char *argv)
 	else
 	{
 		int status;
-		waitpid(child, &status, WNOHANG);
-		printf("Exiting NaiveDB. Goodbye!\n");
+		waitpid(child, &status, 0);
 	}
+printf("Exiting NaiveDB. Goodbye!\n"); 
+return 0;
 }

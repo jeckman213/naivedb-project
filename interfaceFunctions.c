@@ -105,7 +105,6 @@ int main (int argc, char *argv)
 
 		else if (strcmp(command, CONVERT) == 0)
 		{
-			printf("test1\n");
 			// Gets the in file name
 			strcpy(filename1, strtok(NULL, " "));
 
@@ -127,6 +126,35 @@ int main (int argc, char *argv)
                         waitpid(0, &status, 0);
 			}
 		}
+		
+		else if (strcmp(command, INDEXER) == 0)
+		{
+				//Get first file name
+				strcpy(filename1, strtok(NULL, " "));
+
+                                // Gets new file name
+                                strcpy(filename2, strtok(NULL, " "));
+
+                                char* args[]={"./indexer", filename1, filename2, NULL};
+
+                                child = fork();
+                                if (child==0)
+                                        {
+                                        execv("./indexer", args);
+                                        perror("exec failed!");
+                                        return EXIT_SUCCESS;
+                                        }
+                                else if (child == -1)
+                                {
+                                         return EXIT_FAILURE;
+                                }       
+				else
+				{
+				int status;
+				waitpid(child, &status, WNOHANG);
+				}
+
+		} 
 		// Gets another user input
 		printf("Enter another command (enter 'quit' to stop): \n");
 		scanf("%[^\n]%*c", line);
