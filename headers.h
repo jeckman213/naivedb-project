@@ -21,3 +21,5 @@ typedef struct Airports
 }Airport;
 
 char* getLine(FILE* stream);
+
+int hashFunction(char *s, int T);
