@@ -9,7 +9,7 @@
 typedef struct Airlines
 {
     // String airline code
-	char *airLineCode;
+	char *filename;
 
     // Number of occurences of the parent airport
 	int occurences;
@@ -33,8 +33,8 @@ Airline *CreateAirline()
     Airline *airline = (Airline*) malloc(sizeof(Airline));
 
     // Allocate space for airline code string
-    airline->airLineCode = (char*) malloc(10);
-    strcpy(airline->airLineCode, "empty");
+    airline->filename = (char*) malloc(10);
+    strcpy(airline->filename, "empty");
 
     // Init occurences to 0
     airline->occurences = 0;
@@ -64,7 +64,7 @@ Airport *CreateAirport()
 
 // Inserts data into array of airports specified in the params
 // Takes in airline file name (ex. AA.txt) and an airport code (ex. JFK)
-void InsertData(char *airlineFileName, char *apCode)
+void InsertData(const char *airlineFileName, char *apCode)
 {
     int count = 0,
         inner = 0,
@@ -80,8 +80,8 @@ void InsertData(char *airlineFileName, char *apCode)
             // For each airline in the airport structure
             for (inner = 0; inner <= 10; inner++)
             {
-                // If airlinecode(airline file name) matches the airline file name param
-                if (strcmp(AIRPORTS[count]->airLines[inner]->airLineCode, airlineFileName) == 0)
+                // If filename(airline file name) matches the airline file name param
+                if (strcmp(AIRPORTS[count]->airLines[inner]->filename, airlineFileName) == 0)
                 {
                     AIRPORTS[count]->airLines[inner]->occurences++;
 					return;
@@ -91,7 +91,7 @@ void InsertData(char *airlineFileName, char *apCode)
                 {
                     // Creation of new airline in array of airlines
                     AIRPORTS[count]->airLines[inner] = CreateAirline();
-                    strcpy(AIRPORTS[count]->airLines[inner]->airLineCode, airlineFileName);
+                    strcpy(AIRPORTS[count]->airLines[inner]->filename, airlineFileName);
                     AIRPORTS[count]->airLines[inner]->occurences++;
                     return;
                 }
@@ -109,7 +109,7 @@ void InsertData(char *airlineFileName, char *apCode)
     {
         strcpy(AIRPORTS[count]->airPortCode, apCode);
         AIRPORTS[count]->airLines[0] = CreateAirline();
-        strcpy(AIRPORTS[count]->airLines[0]->airLineCode, airlineFileName);
+        strcpy(AIRPORTS[count]->airLines[0]->filename, airlineFileName);
         AIRPORTS[count]->airLines[0]->occurences++;
     }
 }
@@ -129,13 +129,11 @@ int Parse(const char *path, const struct stat *sb, int flag)
             spaces = 0;
 
         char *apCode1 = (char*) malloc(10),
-            *apCode2 = (char*) malloc(10),
-            *alCode = (char*) malloc(10);
+            *apCode2 = (char*) malloc(10);
 		
 		// Sets all codes and line to empty string
         memset(apCode1, 0, strlen(apCode1));
         memset(apCode2, 0, strlen(apCode2));
-        memset(alCode, 0, strlen(alCode));
         memset(line, 0, strlen(line));
 
 		// Gets a line at a time to read into structure
@@ -144,18 +142,8 @@ int Parse(const char *path, const struct stat *sb, int flag)
 			// For char in line
             for (count = 0; count < strlen(line); count++) 
             {
-				// Gets the airline code
-                if (count >= 0 && count <= 2)
-                {
-                    // If it hits a number continue and don't do anything
-                    // This is in the case the airline code is less than the space allocated
-                    if (line[count] >= '0' && line[count] <= '9') 
-                        continue;
-                    else
-                        alCode[count] = line[count];
-                }
 				// Adds to the spaces counter
-                else if (line[count] == ' ')
+                if (line[count] == ' ')
                 {
                     // Flag that there was a space indicated
                     spaces++;
@@ -171,17 +159,14 @@ int Parse(const char *path, const struct stat *sb, int flag)
                     strncat(apCode2, &line[count], 1);
                 }
             }
-            // Add .txt to end of alCode to open specified file name
-            strncat(alCode, ".txt", 5);
 
 			// Inserts data into airports array
-            InsertData(alCode, apCode1);
-	        InsertData(alCode, apCode2);
+            InsertData(path, apCode1);
+	        InsertData(path, apCode2);
 
 			// Reset the codes and line for reuse in loop and ftw
             memset(apCode1, 0, strlen(apCode1));
             memset(apCode2, 0, strlen(apCode2));
-            memset(alCode, 0, strlen(alCode));
             memset(line, 0, strlen(line));
 			
 			// Reset spaces for next loop
@@ -191,7 +176,6 @@ int Parse(const char *path, const struct stat *sb, int flag)
 		// Free all heap memory variables
 		free(apCode1);
 		free(apCode2);
-		free(alCode);
 		free(line);
 
         // Closes file
@@ -253,22 +237,18 @@ void printToFile(char *filename)
 	    fprintf(file, "%s\n\t", AIRPORTS[count]->airPortCode);
 
         // Sort by occurences
-        while(strcmp(AIRPORTS[count]->airLines[inner]->airLineCode, "empty") != 0)
-        {	
-			printf("inner:%s\ninner+1:%s\n", 
-				AIRPORTS[count]->airLines[inner]->airLineCode,
-				AIRPORTS[count]->airLines[inner + 1]->airLineCode);
-				
+        while(strcmp(AIRPORTS[count]->airLines[inner]->filename, "empty") != 0)
+        {		
             if (AIRPORTS[count]->airLines[inner]->occurences < AIRPORTS[count]->airLines[inner + 1]->occurences)
             {
                     temp->occurences = AIRPORTS[count]->airLines[inner + 1]->occurences;
-                    strcpy(temp->airLineCode, AIRPORTS[count]->airLines[inner + 1]->airLineCode);
+                    strcpy(temp->filename, AIRPORTS[count]->airLines[inner + 1]->filename);
 
                     AIRPORTS[count]->airLines[inner + 1]->occurences = AIRPORTS[count]->airLines[inner]->occurences;
-                    strcpy(AIRPORTS[count]->airLines[inner + 1]->airLineCode, AIRPORTS[count]->airLines[inner]->airLineCode);
+                    strcpy(AIRPORTS[count]->airLines[inner + 1]->filename, AIRPORTS[count]->airLines[inner]->filename);
 
                     AIRPORTS[count]->airLines[inner]->occurences = temp->occurences;
-                    strcpy(AIRPORTS[count]->airLines[inner]->airLineCode, temp->airLineCode);
+                    strcpy(AIRPORTS[count]->airLines[inner]->filename, temp->filename);
             }
             inner++;
         }
@@ -276,11 +256,11 @@ void printToFile(char *filename)
 		// Reset inner counter for reuse
         inner = 0;
 
-	    while(strcmp(AIRPORTS[count]->airLines[inner]->airLineCode, "empty") != 0)
+	    while(strcmp(AIRPORTS[count]->airLines[inner]->filename, "empty") != 0)
 	    {
             // Print the file it is in and the number of occurences
 	        fprintf(file, "(%s %d) ", 
-		        AIRPORTS[count]->airLines[inner]->airLineCode, 
+		        AIRPORTS[count]->airLines[inner]->filename, 
 		        AIRPORTS[count]->airLines[inner]->occurences);
             inner++;
 	    }
@@ -309,13 +289,13 @@ void main(int argc, char *argv[])
     }
 
     /*strcpy(AIRPORTS[0]->airPortCode, "JFK");
-   strcpy(AIRPORTS[0]->airLines[0]->airLineCode, "AA.txt");
+   strcpy(AIRPORTS[0]->airLines[0]->filename, "AA.txt");
   AIRPORTS[0]->airLines[0]->occurences++; */
 
     if (argc == 2)
     {
         ftw(argv[1], Parse, 5);
-	    printToFile("indexer.txt");
+	    printToFile("invind.txt");
     }
     else 
     {
