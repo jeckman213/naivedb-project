@@ -4,7 +4,7 @@
 typedef struct Airlines
 {
     // String airline code
-	char *airLineCode;
+	char *filename;
 
     // Number of occurences of the parent airport
 	int occurences;
