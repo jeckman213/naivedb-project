@@ -22,9 +22,6 @@ char string2[20];
 		strcpy(string2, argv[3]);
   //-f = filepath, permission 0640
   // -d = directory path, permission 0750
-//printf("flag: %s\n", flag); Bug testing prints
-//printf("string1: %s\n", string1);
-//printf("string2: %s\n", string2);
 
   if (strcmp(flag, "-f") == 0)
   {
