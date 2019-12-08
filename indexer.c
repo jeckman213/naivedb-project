@@ -4,8 +4,31 @@
 #include <string.h>
 #include <sys/stat.h>
 
+<<<<<<< HEAD
 #include "headers.h"
 
+=======
+/**--------------------------Structure definition--------------------------**/
+// struct definition for the airline structure **/
+typedef struct Airlines
+{
+    // String airline code
+	char *airLineCode;
+
+    // Number of occurences of the parent airport
+	int occurences;
+}Airline;
+
+// struct definition for the airport structure **/
+typedef struct Airports
+{
+    // String airport code
+    char *airPortCode;
+
+    // Array of airlines that occur in this airport
+	Airline *airLines[20];
+}Airport;
+>>>>>>> 5abfd1fbde45cb6e9e839b297b6ee60af4061778
 
 /**--------------------------Structure Creation--------------------------**/
 // Creates a new airline and allocates memory on the heap
