@@ -70,3 +70,29 @@ int  hashFunction(char *s,  int T) {
 
 } /* End of hash function */
 
+typedef struct node {
+struct node *left;
+struct node *right;
+char key[4];
+int occurrences;
+}Tree;
+
+//Creates a node for the binary tree
+Tree *createNode(char key[4], int occurrences)
+{
+Tree *node=(Tree*)malloc(sizeof(Tree));
+strcpy(node->key, key);
+node->occurrences=occurrences;
+node->right=NULL;
+node->left=NULL;
+return(node);
+}
+
+void inorderPrint(Tree* node)
+{
+if(node==NULL)
+        return;
+inorderPrint(node->left);
+printf("%s\t", node->key);
+inorderPrint(node->right);
+}

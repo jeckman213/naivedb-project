@@ -139,14 +139,20 @@ int main (int argc, char **argv)
 		
 		else if (strcmp(command, INDEXER) == 0)
 		{
+				char* args[5];
 				//Get first file name
 				strcpy(filename1, strtok(NULL, " "));
 
                                 // Gets new file name
                                 strcpy(filename2, strtok(NULL, " "));
-
-                                char* args[]={"./indexer", filename1, filename2, NULL};
-
+				if (filename2!=NULL)
+				{
+                                	 char* args[]={"./indexer", filename1, filename2, NULL};
+				}
+				else
+				{
+					 char* args[]={"./indexer", filename1, NULL};
+				}
                                 child = fork();
                                 if (child==0)
                                         {
@@ -165,6 +171,39 @@ int main (int argc, char **argv)
 				}
 
 		} 
+
+		else if (strcmp(command, "srchindx") == 0)
+                {
+                        char flag2[3];
+			char keywords[50];
+			char directory[50];
+			char indexerFile[50];
+			// Gets the flag
+                        strcpy(flag2, strtok(NULL, " "));
+
+                        // Gets the entered search words
+                        strcpy(keywords, strtok(NULL, " "));
+
+			strcpy(indexerFile, strtok(NULL, " "));
+
+                        strcpy(directory, strtok(NULL, " "));
+			
+		        char* args[]={"./srchindx", flag2, keywords, indexerFile, directory, NULL};
+                        child=fork();
+                        if (child==0)
+                        {
+                        execv("./srchindx", args);
+                        perror("srchindx failed");
+                        return EXIT_SUCCESS;
+			}
+			else if (child==-1)
+				return EXIT_FAILURE;
+			else
+			{
+			int status;
+			waitpid(child, &status, WNOHANG);
+			}
+		}
 		if (argc > 1)
 		{
 			if(fgets(line, 50, script) == NULL)

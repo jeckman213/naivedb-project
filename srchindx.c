@@ -214,11 +214,11 @@ void main(int argc, char** argv)
 	  //airport is destination
       else if (strcmp(flag, "-d") == 0)
       {
-		int spaces = 0, letterNum = 0;
-		char dest[10],
-			 airline[5];
-		
-		while(fgets(currentLine, 50, searchFile) != NULL)
+		Tree *root=NULL, *newNode, *currentNode;//Initiallizes a root node, node to be created, and placeholder node for traversing the tree
+		int spaces = 0, letterNum = 0, occurrences;//Number of spaces identifies the destination column in data file
+		char dest[10], airline[5];
+		memset(dest, 0, sizeof(dest));
+		while(fgets(currentLine, 50, searchFile) != NULL)//Searches file for destinations
 		{
 			for(i = 0; i < strlen(currentLine); i++)
 			{
@@ -229,31 +229,67 @@ void main(int argc, char** argv)
 					dest[letterNum] = currentLine[i];
 					letterNum++;
 				}
-				else if (spaces == 0)
-				{
-					if (currentLine[i] >= '0' && currentLine[i] <= '9')
+				else if (spaces==0)
+					{
+					if (currentLine[i] >= '0' && currentLine[i]<= '9')
 						continue;
 					else
-						airline[i] = currentLine[i];
-				}
-				
-				if(spaces > DEST_SPACES)
+						airline[i]=currentLine[i]; //Gets airline going to given destination
+					printf("Airline: %s\n", airline);
+					}
+
+				else if(spaces > DEST_SPACES)//File traversal over
 					break;
-			}
+			}			
 			
+			spaces=0;
+			letterNum=0;
+
+			occurrences=1;//Initialize occurrences
+			printf("terms: %s, dest: %s\n", terms[count], dest);
+		
 			if (strcmp(terms[count], dest) == 0)
 			{
-				// Insert into Hash
-				printf("Found Destination: %s\nFound Airline:%s\n", dest, airline);
-			}
+
+				// Insert into Binary Tree
+				if (root!=NULL) //Creates the root if none exists
+				{
+					newNode = createNode(airline, occurrences);
+				}
+				else // if root exists, creates a node to be added
+				{
+					root = createNode(airline, occurrences);
+				}
+				currentNode=root;
+				while(currentNode!=NULL)//cycles through tree
+					{
+					//printf("current node occ: %d\n", currentNode->occurrences);
+
+					if(strcmp(currentNode->key, airline)==0)
+						{
+						currentNode->occurrences++;//if the airline already exist, occurrences increase
+						break;
+						}
+					else if(currentNode->left==NULL && strcmp(currentNode->key, newNode->key)>0)
+						currentNode->left=newNode; 
+					else if (currentNode->right==NULL && strcmp(currentNode->key, newNode->key)<0)
+						currentNode->right=newNode;
+					else if(currentNode->left!=NULL && strcmp(currentNode->key, newNode->key)>0)
+						currentNode=currentNode->left;
+					else
+						currentNode=currentNode->right;
+	
+					}
 			
-			// Reset spaces and letterNum
-			spaces = 0;
-			letterNum = 0;
-			//memset(dest, 0, strlen(dest));
-			//memset(airline, 0, strlen(airline));
+				}
+
+				printf("Found Destination: %s\n", dest);
 		}
-      }
+			
+		printf("Inorder print of tree with destination %s: ", terms[count]);
+	        inorderPrint(root);
+		printf("\n");
+		}
       else
         printf("Flag does not exist\n");
 	
