@@ -1,0 +1,8 @@
+create -f file2
+create -h file2 lnk2file2
+fileconverter flightdata datadir
+indexer datadir
+indexer aaindx.txt datadir/AA.txt
+srchindx -o EWR aaindx.txt datadir > foo.txt
+srchindx -o LAX datadir
+quit

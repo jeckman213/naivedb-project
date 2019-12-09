@@ -8,9 +8,27 @@
 #include "headers.h"
 #include "commands.h"
 
-int main (int argc, char *argv)
+int main (int argc, char **argv)
 {
-	char* args[]={"./interfaceFunctions", NULL};
+	char *args[4];
+	// If a script file is specified make it an arg
+	if (argc > 1)
+	{
+	printf("here\n");
+		args[0] = malloc(sizeof(char) * 50);
+		strcpy(args[0], "./interfaceFunctions");
+		args[1] = malloc(sizeof(char) * 50);
+		strcpy(args[1], argv[1]);
+		args[2] = NULL;
+	}
+	// Otherwise don't pass anything
+	else 
+	{
+	printf("here\n");
+		strcpy(args[0], "./interfaceFunctions");
+		args[1] = NULL;
+	}
+	printf("1\n");
 
 	printf("Welcome to NaiveDB!\n");
 

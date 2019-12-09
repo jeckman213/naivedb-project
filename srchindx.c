@@ -25,7 +25,7 @@ void initHashTable(HashNode *HashTable[])
 	}
 }
 
-char* main(int argc, char** argv)
+void main(int argc, char** argv)
 {
   HashNode *HashTable[200];
   
@@ -208,13 +208,15 @@ char* main(int argc, char** argv)
 			// Reset spaces and letterNum
 			spaces = 0;
 			letterNum = 0;
+			memset(origin, 0 , strlen(origin));
 		}
       }
 	  //airport is destination
       else if (strcmp(flag, "-d") == 0)
       {
 		int spaces = 0, letterNum = 0;
-		char dest[10];
+		char dest[10],
+			 airline[5];
 		
 		while(fgets(currentLine, 50, searchFile) != NULL)
 		{
@@ -227,6 +229,13 @@ char* main(int argc, char** argv)
 					dest[letterNum] = currentLine[i];
 					letterNum++;
 				}
+				else if (spaces == 0)
+				{
+					if (currentLine[i] >= '0' && currentLine[i] <= '9')
+						continue;
+					else
+						airline[i] = currentLine[i];
+				}
 				
 				if(spaces > DEST_SPACES)
 					break;
@@ -235,12 +244,14 @@ char* main(int argc, char** argv)
 			if (strcmp(terms[count], dest) == 0)
 			{
 				// Insert into Hash
-				printf("Found Destination: %s\n", dest);
+				printf("Found Destination: %s\nFound Airline:%s\n", dest, airline);
 			}
 			
 			// Reset spaces and letterNum
 			spaces = 0;
 			letterNum = 0;
+			//memset(dest, 0, strlen(dest));
+			//memset(airline, 0, strlen(airline));
 		}
       }
       else
@@ -252,15 +263,13 @@ char* main(int argc, char** argv)
 	   // Update currentRecord with next file
        currentRecord = strtok(NULL, " ");
 	   if (strtok(NULL, " ") == NULL)
-		break;
+	     break;
 	   else
 	   {
 	     currentRecord[0] = '\0';
 	     currentRecord++;
 		 printf("%s\n", currentRecord);
 	   }
-	   
-	   printf("2");
 	    
 		// Reset set tempPath to empty
 		memset(tempPath, 0 , 20);
@@ -271,26 +280,31 @@ char* main(int argc, char** argv)
 	memset(currentLine, 0, 50);
 	
 	rewind(currentFile);
+	exit(0);
   }
-  
+
+  HashNode *loop;
+  int t;
+  for(t = 0; t < 200; t++)
+  {
+    if(HashTable[t]->numOperating != 0)
+    {
+		printf("Index %d:", t);
+		loop = HashTable[t];
+        while(1)
+		{
+			printf("Origin:%s Operating Airlines:%d ->", t, loop->origin, loop->numOperating);
+			break;
+		}
+		printf("\n");
+     }
+  }
+
+  free(loop);
+
   // Close inverted index file
   fclose(currentFile);
 
-/*  int t;
-  for(t = 0; t < 200; t++)
-  {
-    if (HashTable[t]->numOperating == 0)
-	continue;
-    else
-    {
-        HashNode *temp = HashTable[t];
-        while(temp != NULL)
-	{
-	  printf("%d Origin: %s Operating Airlines: %d\n", t, temp->origin, temp->numOperating);
-          temp = temp->next;
-	}
-
-     }
-  }*/
+  return;
 }
 

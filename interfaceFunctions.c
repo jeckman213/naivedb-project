@@ -5,10 +5,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "headers.h"
 #include "commands.h"
 
-int main (int argc, char *argv)
+int main (int argc, char **argv)
 {
 	pid_t child;
 	char command[10],
@@ -17,12 +16,23 @@ int main (int argc, char *argv)
 		filename2[20];
 	char *line = (char*) malloc(sizeof(char) * 50);
 
+	FILE *script;
+
 	//string = name of new file for create command
 	printf("Enter a command (format is [command] [flag] [string])\n");
 
+	if (argc > 1)
+	{
+		script = fopen(argv[1], "r");
 
+		fgets(line, 50, script);
+		printf("%s\n", line);
+	}
+	else
+	{
 	// Get user input
 	scanf("%[^\n]%*c", line);
+	}
 
 	// If the user just enter an empty line display a list of commands that can be done
 	if (strcmp(line, "\n") == 0)
@@ -155,9 +165,23 @@ int main (int argc, char *argv)
 				}
 
 		} 
+		if (argc > 1)
+		{
+			if(fgets(line, 50, script) == NULL)
+			{
+				fclose(script);
+				free(line);
+				printf("End of script...");
+				return 0;
+			}
+			printf("%s\n", line);
+		}
+		else 
+		{
 		// Gets another user input
 		printf("Enter another command (enter 'quit' to stop): \n");
 		scanf("%[^\n]%*c", line);
+		}
 
 		// Inserts first user typed word into command string
 		strcpy(command, strtok(line, " "));

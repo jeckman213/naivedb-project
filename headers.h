@@ -37,7 +37,7 @@ typedef struct HashNode
 
 }HashNode;
 
-char* getLine(FILE* stream);
+extern char* getLine(FILE* stream);
 
 /*Hash Function*/
 int  hashFunction(char *s,  int T) {

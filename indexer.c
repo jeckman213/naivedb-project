@@ -100,7 +100,7 @@ int Parse(const char *path, const struct stat *sb, int flag)
 {
     // Checks to see if path is flagged as a file
     if (flag == FTW_F)
-    {
+    {	
         // Allocate memory for getting the line/buffer
         char *line = malloc(50);
 
@@ -142,9 +142,24 @@ int Parse(const char *path, const struct stat *sb, int flag)
                 }
             }
 
-			// Inserts data into airports array
-            InsertData(path, apCode1);
-	        InsertData(path, apCode2);
+			char filePath[20],
+				 *token;
+
+			strcpy(filePath, path);
+
+			token = strtok(filePath, "/");
+			if((token = strtok(NULL, " ")) == NULL)
+			{
+				// Inserts data into airports array
+				InsertData(path, apCode1);
+				InsertData(path, apCode2);
+			}
+			else
+			{
+				// Inserts data into airports array
+				InsertData(token, apCode1);
+				InsertData(token, apCode2);
+			}
 
 			// Reset the codes and line for reuse in loop and ftw
             memset(apCode1, 0, strlen(apCode1));
