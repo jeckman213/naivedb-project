@@ -216,7 +216,7 @@ void printToFile(char *filename)
     while(strcmp(AIRPORTS[count]->airPortCode, "empty") != 0)
     {
         // Print the airport code
-	    fprintf(file, "%s\n\t", AIRPORTS[count]->airPortCode);
+	    fprintf(file, "%s\n", AIRPORTS[count]->airPortCode);
 
         // Sort by occurences
         while(strcmp(AIRPORTS[count]->airLines[inner]->filename, "empty") != 0)

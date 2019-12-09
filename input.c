@@ -4,7 +4,7 @@
 
 char* getLine(FILE* stream)
 {
-char* line=malloc(256);
-fgets(line, sizeof(line), stream);
-return line;
+  char* line = malloc(256);
+  fgets(line, sizeof(line), stream);
+  return line;
 }
