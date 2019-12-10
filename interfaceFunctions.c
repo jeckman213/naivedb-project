@@ -34,10 +34,16 @@ int main (int argc, char **argv)
 	scanf("%[^\n]%*c", line);
 	}
 
-	// If the user just enter an empty line display a list of commands that can be done
-	if (strcmp(line, "\n") == 0)
+/*	// If the user just enter an empty line display a list of commands that can be done
+	if (strcmp(line, "\n")=0)
+	{
 		printf("List of commands:\n create: flags -f (create file), -d (create directory), -h (create hard link), and -s (create soft link)");
-
+		printf("\n fileconverter [infile] [outdirectory]");
+		printf("\n indexer [index file name] [directory]");
+		printf("\n srchindx [flag] [search terms separated by ;] [index file name] [path]\n\tFlags: -o (origin airport), -d (destination airport)");
+		return 0;
+	}
+*/	
 	// Get the command from the entered line
 	strcpy(command, strtok(line, " "));
 
@@ -55,7 +61,7 @@ int main (int argc, char **argv)
 			if (strcmp(flag, "-f") == 0 || strcmp(flag, "-d") == 0)
 			{
 				strcpy(filename1, strtok(NULL, " "));
-				char *args[]={"./create", flag, filename1, NULL};
+				char *args[]={"./create", flag, filename1, NULL}; //create array of strings used as command line arguments
 				child = fork();
 				if (child==0)
 					{
@@ -68,7 +74,7 @@ int main (int argc, char **argv)
 					return EXIT_FAILURE;
 				}	
 
-				else
+				else             //parent waits for child and continues to take inputs
 				{
 					int status;
 					waitpid(child, &status, WNOHANG);
@@ -143,7 +149,7 @@ int main (int argc, char **argv)
 				//Get first file name
 				strcpy(filename1, strtok(NULL, " "));
 
-                                // Gets new file name
+                                // Gets second file name
                                 strcpy(filename2, strtok(NULL, " "));
 				if (filename2!=NULL)
 				{
@@ -174,7 +180,7 @@ int main (int argc, char **argv)
 
 		else if (strcmp(command, "srchindx") == 0)
                 {
-                        char flag2[3];
+                        char flag2[3]; //command line arguments for srchindx
 			char keywords[50];
 			char directory[50];
 			char indexerFile[50];
@@ -204,7 +210,7 @@ int main (int argc, char **argv)
 			waitpid(child, &status, WNOHANG);
 			}
 		}
-		if (argc > 1)
+		if (argc > 1) //Reads commands from provided script
 		{
 			if(fgets(line, 50, script) == NULL)
 			{
